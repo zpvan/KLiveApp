@@ -9,6 +9,7 @@ import com.knox.kyingke.R
 import com.knox.kyingke.adapter.LiveVpAdapter
 import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_live.*
+import kotlinx.android.synthetic.main.include_live_top.*
 
 /**
  * @author Knox.Tsang
@@ -25,6 +26,8 @@ class LiveFragment : Fragment() {
         val TAG: String = "LiveFragment"
     }
 
+    val strArray = KSimpleUtil.KGetStringArrayFromRes(R.array.title)
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frag_live, container, false)
         return view
@@ -34,10 +37,17 @@ class LiveFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         initAdapter()
+        initSlidingTabLayout()
+
+        /*默认选中hotFragment*/
+        vp_live.currentItem = 1;
+    }
+
+    private fun initSlidingTabLayout() {
+        stl_live.setViewPager(vp_live, strArray)
     }
 
     private fun initAdapter() {
-        val strArray = KSimpleUtil.KGetStringArrayFromRes(R.array.title)
         val fragList = mutableListOf<Fragment>()
         var i: Int = 0
         while (i < strArray.size) {

@@ -14,10 +14,19 @@
         android:layout_marginLeft="8dp"
         android:src="@drawable/title_button_search" />
 
-    <Space
+    <com.flyco.tablayout.SlidingTabLayout
+        android:id="@+id/stl_live"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        tl:tl_indicator_corner_radius="1.5dp"
+        tl:tl_indicator_height="3dp"
+        tl:tl_indicator_margin_bottom="2dp"
+        tl:tl_indicator_width="15dp"
+        tl:tl_tab_padding="10dp"
+        tl:tl_textSelectColor="@color/white"
+        tl:tl_textUnselectColor="@color/white20"
+        tl:tl_textsize="16sp" />
 
     <ImageView
         android:id="@+id/iv_right"
