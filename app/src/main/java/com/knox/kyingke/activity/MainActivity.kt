@@ -17,31 +17,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     val fragmentManager = supportFragmentManager
+    val TAG_LIVE = "tagLiveFragment"
+    val TAG_MINE = "tagMineFragment"
 
     override fun onClick(v: View?) {
         Log.e(TAG, "onClick: ")
         when (v?.id) {
-            R.id.iv_live -> showLive()
-            R.id.iv_mine -> showMine()
+            R.id.iv_live -> clickBtn(TAG_LIVE)
+            R.id.iv_mine -> clickBtn(TAG_MINE)
         }
     }
 
-    private fun showMine() {
-        /*开始fragment事务*/
+    private fun clickBtn(tag: String) {
+        iv_live.isSelected = tag == TAG_LIVE
+        iv_mine.isSelected = tag == TAG_MINE
+        hideFragment(if (tag == TAG_LIVE) TAG_MINE else TAG_LIVE)
+        showFragment(if (tag == TAG_LIVE) TAG_LIVE else TAG_MINE)
+    }
+
+    private fun showFragment(tag : String) {
+        val fragByTag = fragmentManager.findFragmentByTag(tag)
         val trans = fragmentManager.beginTransaction()
-        /*给FrameLayout设置MineFragment*/
-        trans.replace(R.id.fl_main, MineFragment())
-        /*提交事务*/
+        if (fragByTag == null) {
+            trans.add(R.id.fl_main, if (tag == TAG_LIVE) LiveFragment() else MineFragment(), tag)
+        } else {
+            trans.show(fragByTag)
+        }
         trans.commit()
     }
 
-    private fun showLive() {
-        /*开始fragment事务*/
-        val trans = fragmentManager.beginTransaction()
-        /*给FrameLayout设置LiveFragment*/
-        trans.replace(R.id.fl_main, LiveFragment())
-        /*提交事务*/
-        trans.commit()
+    private fun hideFragment(tag : String) {
+        val fragByTag = fragmentManager.findFragmentByTag(tag)
+        if (fragByTag != null) {
+            val trans = fragmentManager.beginTransaction()
+            trans.hide(fragByTag)
+            trans.commit()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,5 +66,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         iv_mine.setOnClickListener(this)
     }
 
-
+    override fun onStart() {
+        super.onStart()
+        clickBtn(TAG_LIVE)
+    }
 }
