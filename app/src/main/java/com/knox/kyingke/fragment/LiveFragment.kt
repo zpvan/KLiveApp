@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import com.knox.kyingke.R
+import com.knox.kyingke.adapter.LiveVpAdapter
+import com.knox.kyingke.utils.KSimpleUtil
+import kotlinx.android.synthetic.main.frag_live.*
 
 /**
  * @author Knox.Tsang
@@ -19,12 +22,31 @@ import android.widget.TextView
 class LiveFragment : Fragment() {
 
     companion object {
-        val TAG:String = "LiveFragment"
+        val TAG: String = "LiveFragment"
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val textView = TextView(context)
-        textView.text = javaClass.name
-        return textView
+        val view = inflater?.inflate(R.layout.frag_live, container, false)
+        return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        val strArray = KSimpleUtil.KGetStringArrayFromRes(R.array.title)
+        val fragList = mutableListOf<Fragment>()
+        var i: Int = 0
+        while (i < strArray.size) {
+            if (i == 0) fragList.add(FocusFragment())
+            else if (i == 1) fragList.add(HotFragment())
+            else if (i == 2) fragList.add(NearFragment())
+            else fragList.add(EmptyFragment())
+            i++
+        }
+        vp_live.adapter = LiveVpAdapter(childFragmentManager, fragList)
     }
 }
