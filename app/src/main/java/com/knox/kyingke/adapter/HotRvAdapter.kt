@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.knox.kyingke.R
+import com.knox.kyingke.bean.hot.HotItemBean
 import com.knox.kyingke.viewholder.KRvViewHolder
 
 /**
@@ -17,11 +18,13 @@ import com.knox.kyingke.viewholder.KRvViewHolder
 
 class HotRvAdapter : RecyclerView.Adapter<KRvViewHolder>() {
 
-    var mList = mutableListOf<String>()
+    var mList = mutableListOf<HotItemBean>()
 
-    fun setDatas(list : MutableList<String>) {
-        mList.addAll(list)
-        notifyDataSetChanged()
+    fun setDatas(list: MutableList<HotItemBean>?) {
+        if (list != null) {
+            mList.addAll(list)
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -34,9 +37,8 @@ class HotRvAdapter : RecyclerView.Adapter<KRvViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: KRvViewHolder?, position: Int) {
-        val s = mList[position]
-        holder?.setText(R.id.tv_content, s)
+        val item = mList[position]
+        holder?.setText(R.id.name, item.creator.nick)
+        holder?.setText(R.id.viewCount, item.online_users.toString())
     }
-
-
 }

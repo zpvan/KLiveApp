@@ -3,12 +3,19 @@ package com.knox.kyingke.fragment
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.HotRvAdapter
+import com.knox.kyingke.bean.hot.HotListBean
+import com.knox.kyingke.http.IRetrofitConnect
+import com.knox.kyingke.http.KRetrofic
 import kotlinx.android.synthetic.main.frag_hot.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * @author Knox.Tsang
@@ -25,6 +32,7 @@ class HotFragment : Fragment() {
         val TAG: String = "HotFragment"
     }
 
+    var conn = KRetrofic.getConnection(IRetrofitConnect::class.java)
     val hotRvAdapter = HotRvAdapter()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,7 +44,6 @@ class HotFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         initRv()
-        /*给一些假数据RvAdapter, 验证效果*/
         initData()
     }
 
@@ -46,13 +53,17 @@ class HotFragment : Fragment() {
     }
 
     private fun initData() {
+        val call = conn.getHotList()
+        call.enqueue(object : Callback<HotListBean> {
+            override fun onFailure(call: Call<HotListBean>?, t: Throwable?) {
+                Log.e(TAG, "onFailure: 请求getHotList失败")
+            }
 
-        val list = mutableListOf<String>()
-        var index = 0
-        while (index < 60) {
-            list.add(index.toString())
-            index++
-        }
-        hotRvAdapter.setDatas(list)
+            override fun onResponse(call: Call<HotListBean>?, response: Response<HotListBean>?) {
+                val body = response?.body()
+                hotRvAdapter.setDatas(body?.lives)
+            }
+
+        })
     }
 }
