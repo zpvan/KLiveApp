@@ -40,5 +40,15 @@ class HotRvAdapter : RecyclerView.Adapter<KRvViewHolder>() {
         val item = mList[position]
         holder?.setText(R.id.name, item.creator.nick)
         holder?.setText(R.id.viewCount, item.online_users.toString())
+
+        /*标签数据*/
+        val lables = item.extra.label
+        val strs = mutableListOf<String>()
+        var index = 0
+        while (index < lables.size) {
+            strs.add(lables[index].tab_key)
+            index++
+        }
+        holder?.setLabel(R.id.ll_tag, strs)
     }
 }
