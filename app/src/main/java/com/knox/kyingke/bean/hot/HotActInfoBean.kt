@@ -1,5 +1,7 @@
 package com.knox.kyingke.bean.hot
 
+import java.io.Serializable
+
 /**
  * @author Knox.Tsang
  * *
@@ -9,7 +11,7 @@ package com.knox.kyingke.bean.hot
  */
 
 
-class HotActInfoBean {
+class HotActInfoBean : Serializable {
     var icon: String = ""
     var uid: Long = 0
 }

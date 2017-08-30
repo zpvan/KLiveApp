@@ -3,6 +3,7 @@ package com.knox.kyingke.bean.hot
 import com.knox.kyingke.bean.CreatorBean
 import com.knox.kyingke.bean.ExtraBean
 import com.knox.kyingke.bean.KTypeBean
+import java.io.Serializable
 
 
 /**
@@ -14,7 +15,7 @@ import com.knox.kyingke.bean.KTypeBean
  */
 
 
-class HotItemBean : KTypeBean{
+class HotItemBean : KTypeBean, Serializable {
     var act_info: HotActInfoBean = HotActInfoBean()
     var creator: CreatorBean = CreatorBean()
     var extra: ExtraBean = ExtraBean()

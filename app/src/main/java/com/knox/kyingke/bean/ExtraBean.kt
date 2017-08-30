@@ -1,6 +1,7 @@
 package com.knox.kyingke.bean
 
 import com.knox.kyingke.bean.hot.HotLabelBean
+import java.io.Serializable
 
 /**
  * @author Knox.Tsang
@@ -11,6 +12,6 @@ import com.knox.kyingke.bean.hot.HotLabelBean
  */
 
 
-class ExtraBean {
+class ExtraBean : Serializable {
     var label: MutableList<HotLabelBean> = mutableListOf()
 }

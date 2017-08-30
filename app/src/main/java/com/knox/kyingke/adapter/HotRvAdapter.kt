@@ -10,6 +10,7 @@ import com.knox.kyingke.bean.hot.HotBannerBean
 import com.knox.kyingke.bean.hot.HotItemBean
 import com.knox.kyingke.utils.KInKeUrlUtil
 import com.knox.kyingke.viewholder.KRvViewHolder
+import java.util.ArrayList
 
 /**
  * @author Knox.Tsang
@@ -101,5 +102,18 @@ class HotRvAdapter : KRvAdapter<KTypeBean>() {
                 mList.add(0, banner)
             }
         }
+    }
+
+    //获取主播数据的接口
+    fun getHotItemMutableList(): MutableList<HotItemBean> {
+        val itemList: MutableList<HotItemBean> = mutableListOf()
+        val iterator = mList.iterator()
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+            if (next.getType() === KTypeBean.TypeHotItem) {
+                itemList.add(next as HotItemBean)
+            }
+        }
+        return itemList
     }
 }

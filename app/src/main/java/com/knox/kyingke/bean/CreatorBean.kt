@@ -1,5 +1,7 @@
 package com.knox.kyingke.bean
 
+import java.io.Serializable
+
 /**
  * @author Knox.Tsang
  * *
@@ -9,7 +11,7 @@ package com.knox.kyingke.bean
  */
 
 
-class CreatorBean {
+class CreatorBean : Serializable {
     var description: String = ""
     var id: Long = 0
     var nick: String = ""

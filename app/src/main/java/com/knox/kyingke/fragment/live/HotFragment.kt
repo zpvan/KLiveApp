@@ -1,5 +1,6 @@
 package com.knox.kyingke.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,11 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.knox.kyingke.R
+import com.knox.kyingke.activity.LiveRoomActivity
 import com.knox.kyingke.adapter.HotRvAdapter
+import com.knox.kyingke.bean.CreatorBean
 import com.knox.kyingke.bean.hot.HotBannerBean
 import com.knox.kyingke.bean.hot.HotListBean
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
+import com.knox.kyingke.listener.IKRvAdapterListener
 import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_hot.*
 import retrofit2.Call
@@ -30,7 +34,7 @@ import retrofit2.Response
  *
  */
 
-class HotFragment : Fragment() {
+class HotFragment : Fragment(), IKRvAdapterListener {
 
     companion object {
         val TAG: String = "HotFragment"
@@ -79,7 +83,21 @@ class HotFragment : Fragment() {
         })
         /*去掉下拉更多的功能, 因为数据都是一次全部请求完回来的*/
         rv_hot.setLoadingMoreEnabled(false)
+
+        hotRvAdapter.setKRvAdapterListener(this)
     }
+
+    override fun onClick(v: View?, position: Int) {
+        val intent = Intent(KSimpleUtil.kGetApplicationContext(), LiveRoomActivity::class.java)
+
+        val hotItemMutableList = hotRvAdapter.getHotItemMutableList()
+        /*mutableList需要转成Array才可以传, 接收的时候也可以从Array转会mutableList, 如果bean用ArrayList写的就不用那么麻烦了*/
+        intent.putExtra(LiveRoomActivity.KEY_ITEM, hotItemMutableList.toTypedArray())
+        intent.putExtra(LiveRoomActivity.KEY_INDEX, position - 1)
+
+        KSimpleUtil.kGetApplicationContext().startActivity(intent)
+    }
+
 
     private fun initRv() {
         rv_hot.layoutManager = LinearLayoutManager(context)

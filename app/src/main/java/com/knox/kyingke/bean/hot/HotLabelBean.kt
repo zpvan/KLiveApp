@@ -1,5 +1,7 @@
 package com.knox.kyingke.bean.hot
 
+import java.io.Serializable
+
 /**
  * @author Knox.Tsang
  * *
@@ -9,6 +11,6 @@ package com.knox.kyingke.bean.hot
  */
 
 
-class HotLabelBean {
+class HotLabelBean : Serializable{
     var tab_key: String = ""
 }
