@@ -1,11 +1,14 @@
 package com.knox.kyingke.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.knox.kyingke.R
+import com.knox.kyingke.activity.SearchActivity
 import com.knox.kyingke.adapter.LiveVpAdapter
 import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_live.*
@@ -20,7 +23,13 @@ import kotlinx.android.synthetic.main.include_live_top.*
  *
  */
 
-class LiveFragment : Fragment() {
+class LiveFragment : Fragment(), View.OnClickListener {
+    override fun onClick(v: View?) {
+        when(v!!.id) {
+            R.id.iv_left -> KSimpleUtil.KstartActivity(SearchActivity::class.java)
+//            R.id.iv_left -> activity.startActivity(Intent(context, SearchActivity::class.java))
+        }
+    }
 
     companion object {
         val TAG: String = "LiveFragment"
@@ -30,7 +39,13 @@ class LiveFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frag_live, container, false)
+        initView(view)
         return view
+    }
+
+    private fun initView(view: View?) {
+        val iv_left = view!!.findViewById<ImageView>(R.id.iv_left)
+        iv_left.setOnClickListener(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

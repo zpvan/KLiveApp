@@ -20,13 +20,7 @@ import com.knox.kyingke.viewholder.KRvViewHolder
  *
  */
 
-class HotRvAdapter : RecyclerView.Adapter<KRvViewHolder>() {
-
-    var mList = mutableListOf<KTypeBean>()
-
-    override fun getItemCount(): Int {
-        return mList.size
-    }
+class HotRvAdapter : KRvAdapter<KTypeBean>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): KRvViewHolder {
         var view: View? = null
@@ -37,7 +31,7 @@ class HotRvAdapter : RecyclerView.Adapter<KRvViewHolder>() {
         return KRvViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: KRvViewHolder?, position: Int) {
+    override fun onBindViewHolder2(holder: KRvViewHolder?, position: Int) {
         val kTypeBean = mList[position]
         if (kTypeBean.getType() == KTypeBean.TypeHotBanner) {
             /*加载轮播图*/

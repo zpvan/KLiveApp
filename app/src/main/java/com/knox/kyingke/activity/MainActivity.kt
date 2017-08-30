@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun initListener() {
         iv_live.setOnClickListener(this)
         iv_mine.setOnClickListener(this)
+
     }
 
     override fun onStart() {

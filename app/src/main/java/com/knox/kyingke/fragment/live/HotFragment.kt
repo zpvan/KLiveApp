@@ -8,11 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.HotRvAdapter
-import com.knox.kyingke.bean.KTypeBean
 import com.knox.kyingke.bean.hot.HotBannerBean
 import com.knox.kyingke.bean.hot.HotListBean
 import com.knox.kyingke.http.IRetrofitConnect
@@ -59,8 +57,8 @@ class HotFragment : Fragment() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 when (newState) {
-                    RecyclerView.SCROLL_STATE_DRAGGING, RecyclerView.SCROLL_STATE_SETTLING -> KSimpleUtil.pauseFresco()
-                    RecyclerView.SCROLL_STATE_IDLE -> KSimpleUtil.resumeFresco()
+                    RecyclerView.SCROLL_STATE_DRAGGING, RecyclerView.SCROLL_STATE_SETTLING -> KSimpleUtil.KpauseFresco()
+                    RecyclerView.SCROLL_STATE_IDLE -> KSimpleUtil.KresumeFresco()
                 }
             }
 

@@ -1,11 +1,15 @@
 package com.knox.kyingke.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.knox.kyingke.KInKeApplication
+import com.knox.kyingke.activity.SearchActivity
 
 /**
  * @author Knox.Tsang
@@ -40,16 +44,21 @@ object KSimpleUtil {
     }
 
     /*Fresco暂停加载图片*/
-    fun pauseFresco() {
+    fun KpauseFresco() {
         if (!Fresco.getImagePipeline().isPaused()) {
             Fresco.getImagePipeline().pause();
         }
     }
 
     /*Fresco回复加载图片*/
-    fun resumeFresco() {
+    fun KresumeFresco() {
         if (Fresco.getImagePipeline().isPaused()) {
             Fresco.getImagePipeline().resume();
         }
+    }
+
+    /*启动一个activity*/
+    fun KstartActivity(clazz: Class<out Activity>) {
+        kGetApplicationContext().startActivity(Intent(kGetApplicationContext(), clazz))
     }
 }

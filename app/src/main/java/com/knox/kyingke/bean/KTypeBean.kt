@@ -14,6 +14,9 @@ interface KTypeBean {
     companion object {
         val TypeHotBanner: Int = 0
         val TypeHotItem: Int = 1
+        val TypeSearchNode: Int = 2
+        val TypeSearchRecommend: Int = 3
+        val  TypeSearchTitle: Int = 4
     }
 
     fun getType() : Int

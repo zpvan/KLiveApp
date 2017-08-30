@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
@@ -60,6 +61,11 @@ class KRvViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         banner.setImages(strs)
         //banner设置方法全部调用完毕时最后调用
         banner.start()
+    }
+
+    fun setImgRes(vId: Int, rId: Int) {
+        val imageView = itemView.findViewById<ImageView>(vId)
+        imageView.setImageResource(rId)
     }
 
 }
