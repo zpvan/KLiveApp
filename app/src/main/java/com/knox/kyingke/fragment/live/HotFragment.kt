@@ -3,10 +3,12 @@ package com.knox.kyingke.fragment
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.HotRvAdapter
 import com.knox.kyingke.bean.KTypeBean
@@ -14,6 +16,7 @@ import com.knox.kyingke.bean.hot.HotBannerBean
 import com.knox.kyingke.bean.hot.HotListBean
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
+import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_hot.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,7 +49,24 @@ class HotFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         initRv()
+        initListener()
         initData()
+    }
+
+    private fun initListener() {
+        rv_hot.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_DRAGGING, RecyclerView.SCROLL_STATE_SETTLING -> KSimpleUtil.pauseFresco()
+                    RecyclerView.SCROLL_STATE_IDLE -> KSimpleUtil.resumeFresco()
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        })
     }
 
     private fun initRv() {

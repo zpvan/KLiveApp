@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.knox.kyingke.KInKeApplication
 
 /**
@@ -36,5 +37,19 @@ object KSimpleUtil {
     fun Kdp2px(dpVal: Float): Int {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal,
                 kGetApplicationContext().resources.displayMetrics).toInt()
+    }
+
+    /*Fresco暂停加载图片*/
+    fun pauseFresco() {
+        if (!Fresco.getImagePipeline().isPaused()) {
+            Fresco.getImagePipeline().pause();
+        }
+    }
+
+    /*Fresco回复加载图片*/
+    fun resumeFresco() {
+        if (Fresco.getImagePipeline().isPaused()) {
+            Fresco.getImagePipeline().resume();
+        }
     }
 }
