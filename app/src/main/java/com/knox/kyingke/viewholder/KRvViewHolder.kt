@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.knox.kyingke.R
 import com.knox.kyingke.utils.KSimpleUtil
 
@@ -38,6 +39,15 @@ class KRvViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             textView.gravity = Gravity.CENTER
             linearLayout.addView(textView, params)
         }
+    }
+
+    fun setImgUrl(vId: Int, url: String) {
+        loadImgByFresco(vId, url)
+    }
+
+    private fun loadImgByFresco(vId: Int, url: String) {
+        val draweeView = itemView.findViewById<SimpleDraweeView>(vId)
+        draweeView.setImageURI(url)
     }
 
 }

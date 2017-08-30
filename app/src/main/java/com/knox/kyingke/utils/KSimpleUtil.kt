@@ -17,7 +17,7 @@ import com.knox.kyingke.KInKeApplication
 
 object KSimpleUtil {
     /*获取Context*/
-    fun kGetApplicationContext() : Context {
+    fun kGetApplicationContext(): Context {
         return KInKeApplication.mContext!!
     }
 
@@ -33,7 +33,7 @@ object KSimpleUtil {
     }
 
     /*dp转px*/
-    fun Kdp2px(dpVal : Float) : Int {
+    fun Kdp2px(dpVal: Float): Int {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal,
                 kGetApplicationContext().resources.displayMetrics).toInt()
     }

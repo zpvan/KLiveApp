@@ -11,11 +11,13 @@
         android:layout_height="60dp"
         android:background="@color/dark_gray">
         <!--主播头像-->
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="8dp" />
+            android:layout_margin="8dp"
+            fresco:placeholderImage="@drawable/default_head"
+            fresco:roundAsCircle="true" />
         <!--主播名字-->
         <TextView
             android:id="@+id/name"
@@ -53,7 +55,7 @@
             android:textColor="@color/orange" />
     </RelativeLayout>
     <!--主播的高清形象照-->
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/src"
         android:layout_width="match_parent"
         android:layout_height="300dp" />

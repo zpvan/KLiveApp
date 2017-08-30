@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.knox.kyingke.R
 import com.knox.kyingke.bean.hot.HotItemBean
+import com.knox.kyingke.utils.KInKeUrlUtil
 import com.knox.kyingke.viewholder.KRvViewHolder
 
 /**
@@ -50,5 +51,11 @@ class HotRvAdapter : RecyclerView.Adapter<KRvViewHolder>() {
             index++
         }
         holder?.setLabel(R.id.ll_tag, strs)
+
+        /*头像加载*/
+        holder?.setImgUrl(R.id.icon, KInKeUrlUtil.getScaledImgUrl(item.creator.portrait, 100, 100))
+
+        /*形象照加载*/
+        holder?.setImgUrl(R.id.src, item.creator.portrait)
     }
 }

@@ -2,6 +2,7 @@ package com.knox.kyingke
 
 import android.app.Application
 import android.content.Context
+import com.facebook.drawee.backends.pipeline.Fresco
 
 /**
  * @author Knox.Tsang
@@ -15,11 +16,13 @@ import android.content.Context
 class KInKeApplication : Application() {
 
     companion object {
-        var mContext: Context ?= null
+        var mContext: Context? = null
     }
 
     override fun onCreate() {
         super.onCreate()
         mContext = this
+
+        Fresco.initialize(this)
     }
 }
