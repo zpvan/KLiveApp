@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.jcodecraeer.xrecyclerview.XRecyclerView
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.HotRvAdapter
 import com.knox.kyingke.bean.KTypeBean
@@ -50,7 +51,7 @@ class HotFragment : Fragment() {
 
         initRv()
         initListener()
-        initData()
+        refreshData(false)
     }
 
     private fun initListener() {
@@ -67,6 +68,19 @@ class HotFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy);
             }
         })
+
+        rv_hot.setLoadingListener(object : XRecyclerView.LoadingListener {
+            override fun onLoadMore() {
+                Log.e(TAG, "onLoadMore: ")
+            }
+
+            override fun onRefresh() {
+                refreshData(true)
+            }
+
+        })
+        /*去掉下拉更多的功能, 因为数据都是一次全部请求完回来的*/
+        rv_hot.setLoadingMoreEnabled(false)
     }
 
     private fun initRv() {
@@ -74,8 +88,8 @@ class HotFragment : Fragment() {
         rv_hot.adapter = hotRvAdapter
     }
 
-    private fun initData() {
-        loadHotList()
+    private fun refreshData(needNotify: Boolean) {
+        loadHotList(needNotify)
         loadBanner()
     }
 
@@ -93,16 +107,20 @@ class HotFragment : Fragment() {
         })
     }
 
-    private fun loadHotList() {
+    private fun loadHotList(needNotify: Boolean) {
         val call = conn.getHotList()
         call.enqueue(object : Callback<HotListBean> {
             override fun onFailure(call: Call<HotListBean>?, t: Throwable?) {
                 Log.e(TAG, "onFailure: 请求getHotList失败")
+                if (needNotify)
+                    rv_hot.refreshComplete()
             }
 
             override fun onResponse(call: Call<HotListBean>?, response: Response<HotListBean>?) {
                 val body = response?.body()
                 hotRvAdapter.loadItemData(body?.lives)
+                if (needNotify)
+                    rv_hot.refreshComplete()
             }
         })
     }

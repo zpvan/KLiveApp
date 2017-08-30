@@ -48,4 +48,7 @@ dependencies {
 
     /*banner*/
     compile 'com.youth.banner:banner:1.4.9'
+
+    /*XRecyclerView*/
+    compile 'com.jcodecraeer:xrecyclerview:1.3.2'
 }
