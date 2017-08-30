@@ -8,7 +8,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.knox.kyingke.R
+import com.knox.kyingke.utils.FrescoImageLoader
 import com.knox.kyingke.utils.KSimpleUtil
+import com.youth.banner.Banner
 
 /**
  * @author Knox.Tsang
@@ -48,6 +50,16 @@ class KRvViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
     private fun loadImgByFresco(vId: Int, url: String) {
         val draweeView = itemView.findViewById<SimpleDraweeView>(vId)
         draweeView.setImageURI(url)
+    }
+
+    fun setBanner(vId: Int, strs: MutableList<String>) {
+        val banner = itemView.findViewById<Banner>(vId)
+        //设置图片加载器
+        banner.setImageLoader(FrescoImageLoader())
+        //设置图片集合
+        banner.setImages(strs)
+        //banner设置方法全部调用完毕时最后调用
+        banner.start()
     }
 
 }

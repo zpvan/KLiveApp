@@ -10,6 +10,7 @@ import com.knox.kyingke.fragment.MineFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.include_bottom.*
 
+
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         showFragment(if (tag == TAG_LIVE) TAG_LIVE else TAG_MINE)
     }
 
-    private fun showFragment(tag : String) {
+    private fun showFragment(tag: String) {
         val fragByTag = fragmentManager.findFragmentByTag(tag)
         val trans = fragmentManager.beginTransaction()
         if (fragByTag == null) {
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         trans.commit()
     }
 
-    private fun hideFragment(tag : String) {
+    private fun hideFragment(tag: String) {
         val fragByTag = fragmentManager.findFragmentByTag(tag)
         if (fragByTag != null) {
             val trans = fragmentManager.beginTransaction()
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initListener()
+
     }
 
     private fun initListener() {

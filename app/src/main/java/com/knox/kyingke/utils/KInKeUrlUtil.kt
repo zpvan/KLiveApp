@@ -15,6 +15,8 @@ object KInKeUrlUtil {
     val BASE_URL_IP = "http://218.11.0.112/"
     //热门页面的所有数据
     const val INDEX_LIVE_ALL_DATE = "api/live/simpleall?uid=260095067"
+    //热门页面轮播图
+    const val INDEX_BANNER = "api/live/ticker"
 
     fun getScaledImgUrl(imgUrl: String, width: Int, height: Int): String {
         var imgUrl = imgUrl

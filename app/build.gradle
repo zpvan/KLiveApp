@@ -45,4 +45,7 @@ dependencies {
 
     /*Fresco*/
     compile 'com.facebook.fresco:fresco:1.5.0'
+
+    /*banner*/
+    compile 'com.youth.banner:banner:1.4.9'
 }

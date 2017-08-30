@@ -1,5 +1,7 @@
 package com.knox.kyingke.bean.hot
 
+import com.knox.kyingke.bean.KTypeBean
+
 
 /**
  * @author Knox.Tsang
@@ -10,6 +12,10 @@ package com.knox.kyingke.bean.hot
  */
 
 
-class HotBannerBean {
+class HotBannerBean : KTypeBean{
+    override fun getType(): Int {
+        return KTypeBean.TypeHotBanner
+    }
+
     var ticker: MutableList<BannerItemBean> = mutableListOf()
 }

@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.HotRvAdapter
+import com.knox.kyingke.bean.KTypeBean
+import com.knox.kyingke.bean.hot.HotBannerBean
 import com.knox.kyingke.bean.hot.HotListBean
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
@@ -53,6 +55,25 @@ class HotFragment : Fragment() {
     }
 
     private fun initData() {
+        loadHotList()
+        loadBanner()
+    }
+
+    private fun loadBanner() {
+        val call = conn.getBanner()
+        call.enqueue(object : Callback<HotBannerBean> {
+            override fun onFailure(call: Call<HotBannerBean>?, t: Throwable?) {
+                Log.e(TAG, "onFailure: 请求getBanner失败")
+            }
+
+            override fun onResponse(call: Call<HotBannerBean>?, response: Response<HotBannerBean>?) {
+                val body = response?.body()
+                hotRvAdapter.loadBannerData(body)
+            }
+        })
+    }
+
+    private fun loadHotList() {
         val call = conn.getHotList()
         call.enqueue(object : Callback<HotListBean> {
             override fun onFailure(call: Call<HotListBean>?, t: Throwable?) {
@@ -61,9 +82,8 @@ class HotFragment : Fragment() {
 
             override fun onResponse(call: Call<HotListBean>?, response: Response<HotListBean>?) {
                 val body = response?.body()
-                hotRvAdapter.setDatas(body?.lives)
+                hotRvAdapter.loadItemData(body?.lives)
             }
-
         })
     }
 }

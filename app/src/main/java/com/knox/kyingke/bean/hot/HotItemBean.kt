@@ -2,6 +2,7 @@ package com.knox.kyingke.bean.hot
 
 import com.knox.kyingke.bean.CreatorBean
 import com.knox.kyingke.bean.ExtraBean
+import com.knox.kyingke.bean.KTypeBean
 
 
 /**
@@ -13,7 +14,7 @@ import com.knox.kyingke.bean.ExtraBean
  */
 
 
-class HotItemBean {
+class HotItemBean : KTypeBean{
     var act_info: HotActInfoBean = HotActInfoBean()
     var creator: CreatorBean = CreatorBean()
     var extra: ExtraBean = ExtraBean()
@@ -22,4 +23,8 @@ class HotItemBean {
     var online_users: Int = 0
     var room_id: Long = 0
     var stream_addr: String = ""
+
+    override fun getType(): Int {
+        return KTypeBean.TypeHotItem
+    }
 }
