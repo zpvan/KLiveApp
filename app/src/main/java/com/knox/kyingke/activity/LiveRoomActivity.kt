@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
@@ -12,8 +13,10 @@ import android.widget.ImageView
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.LiveRoomAdapter
 import com.knox.kyingke.bean.hot.HotItemBean
+import com.knox.kyingke.widget.media.IjkVideoView
 import fr.castorflex.android.verticalviewpager.VerticalViewPager
 import kotlinx.android.synthetic.main.activity_live_room.*
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 class LiveRoomActivity : AppCompatActivity() {
 
@@ -24,8 +27,9 @@ class LiveRoomActivity : AppCompatActivity() {
     }
 
     var mAdapter: LiveRoomAdapter? = null
+    /*初始值给-1, 不给正值, 是因为第一次进来currentItem可能就跟它一样, 从而不去加载mVideoView*/
     var mLastItem = -1
-    var mVideoView: View? = null
+    var mVideoView: IjkVideoView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +53,18 @@ class LiveRoomActivity : AppCompatActivity() {
     }
 
     private fun initVideoComponent() {
-        mVideoView = ImageView(this)
-        mVideoView!!.setBackgroundResource(R.drawable.icon_dt)
+        // init player
+        IjkMediaPlayer.loadLibrariesOnce(null)
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so")
+
+        val view = LayoutInflater.from(this).inflate(R.layout.item_live_room, null, false)
+        mVideoView = view.findViewById<IjkVideoView>(R.id.video_view)
+
+        /*默认是使用surfaceView, 稍微一滑动屏幕, video都变得全白了, 改成用Texture渲染就没有这个问题.滑动屏幕时, video跟着走*/
+        mVideoView!!.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
+
+        /*原本video size的按比例缩放AR_ASPECT_FIT_PARENT, 切换一次就变成全屏AR_ASPECT_FILL_PARENT*/
+        mVideoView!!.toggleAspectRatio()
     }
 
     private fun initListener(index: Int) {
@@ -68,6 +82,11 @@ class LiveRoomActivity : AppCompatActivity() {
                         (parent as ViewGroup).removeView(mVideoView);
                     }
                     (page as ViewGroup).addView(mVideoView);
+
+                    /*先关掉前一个, 再设置新的url, 再起播*/
+                    mVideoView!!.stopPlayback();
+                    mVideoView!!.setVideoURI(Uri.parse(mAdapter!!.getUrl(currentItem)));
+                    mVideoView!!.start();
                 }
             }
         })
@@ -76,5 +95,13 @@ class LiveRoomActivity : AppCompatActivity() {
     private fun initViewPager(list: MutableList<HotItemBean>) {
         mAdapter = LiveRoomAdapter(list)
         vvp_lr.adapter = mAdapter
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        mVideoView!!.stopPlayback()
+        mVideoView!!.release(true)
+        IjkMediaPlayer.native_profileEnd()
     }
 }

@@ -14,6 +14,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        packagingOptions {
+            /*因为arm64-v8a会导致ijkplayer无法使用
+            * http://blog.csdn.net/u013531824/article/details/53931307*/
+            exclude "lib/arm64-v8a/libimagepipeline.so"
+            exclude "lib/armeabi/libimagepipeline.so"
+            exclude "lib/x86_64/libimagepipeline.so"
+            exclude "lib/x86/libimagepipeline.so"
+        }
     }
     buildTypes {
         release {
@@ -54,4 +62,8 @@ dependencies {
 
     /*verticalviewpager*/
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
+
+    /*ijkplayer*/
+    compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.2'
+    compile 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.2'
 }
