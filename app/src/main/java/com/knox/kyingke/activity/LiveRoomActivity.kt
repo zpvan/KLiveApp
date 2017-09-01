@@ -30,6 +30,8 @@ class LiveRoomActivity : AppCompatActivity() {
     /*初始值给-1, 不给正值, 是因为第一次进来currentItem可能就跟它一样, 从而不去加载mVideoView*/
     var mLastItem = -1
     var mVideoView: IjkVideoView? = null
+    /*视频控件, 里边包括一个用来播放的View, 还有一个展示其它信息的FrameLayout*/
+    var view: View ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +59,8 @@ class LiveRoomActivity : AppCompatActivity() {
         IjkMediaPlayer.loadLibrariesOnce(null)
         IjkMediaPlayer.native_profileBegin("libijkplayer.so")
 
-        val view = LayoutInflater.from(this).inflate(R.layout.item_live_room, null, false)
-        mVideoView = view.findViewById<IjkVideoView>(R.id.video_view)
+        view = LayoutInflater.from(this).inflate(R.layout.item_live_room, null, false)
+        mVideoView = view!!.findViewById<IjkVideoView>(R.id.video_view)
 
         /*默认是使用surfaceView, 稍微一滑动屏幕, video都变得全白了, 改成用Texture渲染就没有这个问题.滑动屏幕时, video跟着走*/
         mVideoView!!.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
@@ -76,17 +78,17 @@ class LiveRoomActivity : AppCompatActivity() {
                     /*还需要判断当前正中央的view是否还有之前那个, 换言之, 用户划来划去, 并没有切换直播间, 要保存当前Item的序号*/
                     mLastItem = currentItem;
                     Log.e(TAG, "transformPage: currentItem " + currentItem + " url " + mAdapter!!.getUrl(currentItem));
-                    val parent = mVideoView!!.parent
+                    val parent = view!!.parent
                     if (parent != null) {
                         /*视频控件如果已经绑定了父控件, 解绑*/
-                        (parent as ViewGroup).removeView(mVideoView);
+                        (parent as ViewGroup).removeView(view)
                     }
-                    (page as ViewGroup).addView(mVideoView);
+                    (page as ViewGroup).addView(view)
 
                     /*先关掉前一个, 再设置新的url, 再起播*/
-                    mVideoView!!.stopPlayback();
-                    mVideoView!!.setVideoURI(Uri.parse(mAdapter!!.getUrl(currentItem)));
-                    mVideoView!!.start();
+                    mVideoView!!.stopPlayback()
+                    mVideoView!!.setVideoURI(Uri.parse(mAdapter!!.getUrl(currentItem)))
+                    mVideoView!!.start()
                 }
             }
         })
