@@ -8,13 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
-import android.widget.ImageView
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.LiveRoomAdapter
 import com.knox.kyingke.bean.hot.HotItemBean
+import com.knox.kyingke.fragment.liveroom.LiveRoomFragment
 import com.knox.kyingke.widget.media.IjkVideoView
-import fr.castorflex.android.verticalviewpager.VerticalViewPager
 import kotlinx.android.synthetic.main.activity_live_room.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
@@ -31,7 +29,8 @@ class LiveRoomActivity : AppCompatActivity() {
     var mLastItem = -1
     var mVideoView: IjkVideoView? = null
     /*视频控件, 里边包括一个用来播放的View, 还有一个展示其它信息的FrameLayout*/
-    var view: View ?= null
+    var view: View? = null
+    val TAG_LIVEROOMFRAGMENT = "LiveRoomActivity::TAG_LIVEROOMFRAGMENT"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +76,6 @@ class LiveRoomActivity : AppCompatActivity() {
                     /*position == 0, 说明该view在屏幕正中了, 占满屏了, 要将视频控件绑到这个view上*/
                     /*还需要判断当前正中央的view是否还有之前那个, 换言之, 用户划来划去, 并没有切换直播间, 要保存当前Item的序号*/
                     mLastItem = currentItem;
-                    Log.e(TAG, "transformPage: currentItem " + currentItem + " url " + mAdapter!!.getUrl(currentItem));
                     val parent = view!!.parent
                     if (parent != null) {
                         /*视频控件如果已经绑定了父控件, 解绑*/
@@ -85,13 +83,40 @@ class LiveRoomActivity : AppCompatActivity() {
                     }
                     (page as ViewGroup).addView(view)
 
-                    /*先关掉前一个, 再设置新的url, 再起播*/
-                    mVideoView!!.stopPlayback()
-                    mVideoView!!.setVideoURI(Uri.parse(mAdapter!!.getUrl(currentItem)))
-                    mVideoView!!.start()
+
+                    loadNewLiveStream(mAdapter!!.getItem(currentItem)!!.stream_addr)
+                    loadNewLiveInfo(mAdapter?.getItem(currentItem))
                 }
             }
         })
+    }
+
+    private fun loadNewLiveInfo(item: HotItemBean?) {
+        /*LiveInfo展示在LiveRoomFragment上, LiveRoomFragment绑定在FrameLayout上, 而FrameLayout在item_live_room.xml中,
+        * item_live_room是在fun initVideoComponent()里边炸出来的, 为什么不在initVideoComponent()里边绑定LiveRoomFragment?
+        * 因为那样会造成Exception, view还没绑定到该activity的布局中时, FrameLayout也就不在activity的布局中, 所以不能绑*/
+        var liveRoomFragment = supportFragmentManager.findFragmentByTag(TAG_LIVEROOMFRAGMENT)
+        if (liveRoomFragment == null) {
+            /*只需要一个fragment就好, 切换直播间时, 它也像mVideoView一样, 是跟着跳转的, 到时只需要更新数据*/
+            liveRoomFragment = LiveRoomFragment()
+            supportFragmentManager.beginTransaction().add(R.id.fl_lr, liveRoomFragment, TAG_LIVEROOMFRAGMENT).commit()
+            /*由于Fragment不是加载完才返回, fragment事务是非阻塞的, 所以这里直接call LiveRoomFragment的updateInfo方法行不通*/
+            val bundle = Bundle()
+            bundle.putSerializable(LiveRoomFragment.KEY_BUNDLEITEM, item)
+            liveRoomFragment.setArguments(bundle)
+        } else {
+            /*直接更新数据*/
+            if (item != null)
+                (liveRoomFragment as LiveRoomFragment).fillLiveRoomInfo(item)
+        }
+
+    }
+
+    /*先关掉前一个, 再设置新的url, 再起播*/
+    private fun loadNewLiveStream(stream_addr: String) {
+        mVideoView!!.stopPlayback()
+        mVideoView!!.setVideoURI(Uri.parse(stream_addr))
+        mVideoView!!.start()
     }
 
     private fun initViewPager(list: MutableList<HotItemBean>) {

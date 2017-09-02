@@ -38,9 +38,9 @@ class LiveRoomAdapter(var mList: MutableList<HotItemBean>?) : PagerAdapter() {
         container!!.removeView(`object` as View?)
     }
 
-    fun getUrl(currentItem: Int): String? {
+    fun getItem(currentItem: Int) : HotItemBean? {
         if (mList != null)
-            return mList!![currentItem].stream_addr
+            return mList!![currentItem]
         else
             return null
     }

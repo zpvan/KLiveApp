@@ -2,11 +2,13 @@ package com.knox.kyingke.http
 
 import com.knox.kyingke.bean.hot.HotBannerBean
 import com.knox.kyingke.bean.hot.HotListBean
+import com.knox.kyingke.bean.liveroom.UserListBean
 import com.knox.kyingke.bean.search.SearchListBean
 import com.knox.kyingke.bean.search.SearchResultBean
 import com.knox.kyingke.utils.KInKeUrlUtil
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 /**
@@ -30,4 +32,7 @@ interface IRetrofitConnect {
 
     @GET
     fun getSearchResult(@Url url: String): Call<SearchResultBean>
+
+    @GET(KInKeUrlUtil.GET_ROOM_VIEWERS)
+    fun getRoomViewers(@Query("id") id: String): Call<UserListBean>
 }

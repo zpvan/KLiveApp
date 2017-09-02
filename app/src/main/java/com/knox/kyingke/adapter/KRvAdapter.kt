@@ -23,6 +23,13 @@ abstract class KRvAdapter<T> : RecyclerView.Adapter<KRvViewHolder>() {
         return mList.size
     }
 
+    fun setDatas(list: MutableList<T>?) {
+        mList.clear()
+        if (list != null)
+            mList = list
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: KRvViewHolder?, position: Int) {
         holder?.itemView!!.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
