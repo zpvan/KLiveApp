@@ -140,7 +140,6 @@ class GiftShopFragment : Fragment(), View.OnClickListener {
             giftRvAdapter.setKRvAdapterListener(object : IKRvAdapterListener{
                 override fun onClick(v: View?, position: Int) {
                     /*选中第几个*/
-                    Log.e(TAG, "onClick: rIndex " + giftRvAdapter.number + " pos " + position)
                     pressItem(giftRvAdapter.number * itemPerPage + position)
                 }
             })
@@ -170,7 +169,6 @@ class GiftShopFragment : Fragment(), View.OnClickListener {
         if (index != -1) {
             val page = index / itemPerPage
             val position = index % itemPerPage
-            Log.e(TAG, "selectOrNot: page " + page + " pos " + position + " index " + index)
             val recyclerView: RecyclerView? = giftShopVpAdapter?.getData(page)
             val adapter: GiftRvAdapter = recyclerView?.adapter as GiftRvAdapter
             adapter.pressItem(position, isSelected)

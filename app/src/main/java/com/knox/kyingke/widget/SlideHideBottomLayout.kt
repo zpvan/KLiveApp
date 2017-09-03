@@ -40,7 +40,6 @@ class SlideHideBottomLayout : RelativeLayout {
             mBottomWidget = getChildAt(1)
         if (mHeight == 0) {
             mHeight = mBottomWidget!!.measuredHeight
-            Log.e(TAG, "onMeasure: mHeight " + mHeight)
         }
 
     }
