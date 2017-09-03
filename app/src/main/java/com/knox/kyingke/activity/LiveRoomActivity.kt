@@ -40,7 +40,6 @@ class LiveRoomActivity : AppCompatActivity() {
         if (intent != null) {
             val extra = intent.getSerializableExtra(KEY_ITEM)
             val toMutableList = (extra as Array<HotItemBean>).toMutableList()
-            Log.e(TAG, "onCreate: list " + toMutableList.size + " toMutableList " + toMutableList)
 
             val index = intent.getIntExtra(KEY_INDEX, 0)
 
@@ -84,7 +83,7 @@ class LiveRoomActivity : AppCompatActivity() {
                     (page as ViewGroup).addView(view)
 
 
-                    //loadNewLiveStream(mAdapter!!.getItem(currentItem)!!.stream_addr)
+                    loadNewLiveStream(mAdapter!!.getItem(currentItem)!!.stream_addr)
                     loadNewLiveInfo(mAdapter?.getItem(currentItem))
                 }
             }

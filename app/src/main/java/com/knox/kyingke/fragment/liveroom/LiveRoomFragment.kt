@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.knox.kyingke.R
+import com.knox.kyingke.R.id.*
 import com.knox.kyingke.adapter.liveroom.ViewerRvAdapter
 import com.knox.kyingke.bean.hot.HotItemBean
 import com.knox.kyingke.bean.liveroom.UserListBean
@@ -16,6 +17,7 @@ import com.knox.kyingke.event.WidgetEvent
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
 import com.knox.kyingke.utils.KInKeUrlUtil
+import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_live_room.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -34,13 +36,6 @@ import retrofit2.Response
  */
 
 class LiveRoomFragment : Fragment(), View.OnClickListener {
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.iv_gift_shop -> {
-                giftShopFragment?.switchContent()
-            }
-        }
-    }
 
     companion object {
         val TAG: String = "LiveRoomFragment"
@@ -87,6 +82,40 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
 
     private fun initListener() {
         iv_gift_shop.setOnClickListener(this)
+        iv_send.setOnClickListener(this)
+
+        KSimpleUtil.setOnKeyboardListener(activity, object : KSimpleUtil.KeyboardListener {
+            override fun onKeyboardShow(distance: Int) {
+                moveRelatedWidget(-distance)
+            }
+
+            override fun onKeyboardHide(distance: Int) {
+                moveRelatedWidget(0)
+            }
+
+        })
+    }
+
+    private fun moveRelatedWidget(distance: Int) {
+        rl_edit.visibility = if (distance == 0) View.GONE else View.VISIBLE
+        rl_bottom.visibility = if (distance == 0) View.VISIBLE else View.GONE
+
+        ll_left.translationY = distance.toFloat()
+        recyclerView_Viewer.translationY = distance.toFloat()
+        card.translationY = distance.toFloat()
+        recyclerView_chat.translationY = distance.toFloat()
+        rl_edit.translationY = distance.toFloat()
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.iv_gift_shop -> giftShopFragment?.switchContent()
+            R.id.iv_send -> {
+                /*必须给焦点rl_edit, 键盘才会弹出来*/
+                edt.requestFocus()
+                KSimpleUtil.KshowInputKeyboard(activity, edt)
+            }
+        }
     }
 
     fun fillLiveRoomInfo(item: HotItemBean) {
