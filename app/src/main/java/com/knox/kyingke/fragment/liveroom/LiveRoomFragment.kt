@@ -128,7 +128,6 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: WidgetEvent) {
-        Log.e(TAG, "onMessageEvent: " + event.msg)
         when (event.msg) {
             WidgetEvent.EVENT_HIDE -> rl_bottom.visibility = View.GONE
             WidgetEvent.EVENT_SHOW -> rl_bottom.visibility = View.VISIBLE
