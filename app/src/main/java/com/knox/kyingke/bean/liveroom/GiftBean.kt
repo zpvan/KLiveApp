@@ -14,4 +14,5 @@ class GiftBean {
     var icon: String = ""
     var image: String = ""
     var name: String = ""
+    var isPressed: Boolean = false
 }

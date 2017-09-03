@@ -26,6 +26,13 @@ class GiftShopVpAdapter : PagerAdapter() {
         notifyDataSetChanged()
     }
 
+    fun getData(position: Int): RecyclerView? {
+        if (position in 0..(mList.size-1))
+            return mList[position]
+        else
+            return null
+    }
+
     override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
         return view == `object`
     }

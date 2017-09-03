@@ -19,6 +19,7 @@ import com.knox.kyingke.bean.liveroom.GiftListBean
 import com.knox.kyingke.event.WidgetEvent
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
+import com.knox.kyingke.listener.IKRvAdapterListener
 import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_gift_shop.*
 import org.greenrobot.eventbus.EventBus
@@ -44,6 +45,7 @@ class GiftShopFragment : Fragment(), View.OnClickListener {
     var mService = KRetrofic.getConnection(IRetrofitConnect::class.java)
     var giftShopVpAdapter: GiftShopVpAdapter? = null
     val itemPerPage = 8
+    var mLastSIndex = -1
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frag_gift_shop, container, false)
@@ -118,6 +120,7 @@ class GiftShopFragment : Fragment(), View.OnClickListener {
         })
     }
 
+
     private fun handleGiftsBean(giftBeans: MutableList<GiftBean>?) {
         /*计算gifts需要多少页才能展示完*/
         var pageNum = (giftBeans?.size!! + itemPerPage - 1) / itemPerPage
@@ -131,8 +134,16 @@ class GiftShopFragment : Fragment(), View.OnClickListener {
         while (rIndex < pageNum) {
             val giftRv = RecyclerView(context)
             giftRv.layoutManager = GridLayoutManager(context, itemPerPage / 2)
-            val giftRvAdapter = GiftRvAdapter()
+            val giftRvAdapter = GiftRvAdapter(rIndex)
             giftRv.adapter = giftRvAdapter
+            /*礼物选中需要一个监听*/
+            giftRvAdapter.setKRvAdapterListener(object : IKRvAdapterListener{
+                override fun onClick(v: View?, position: Int) {
+                    /*选中第几个*/
+                    Log.e(TAG, "onClick: rIndex " + giftRvAdapter.number + " pos " + position)
+                    pressItem(giftRvAdapter.number * itemPerPage + position)
+                }
+            })
             val gifts: MutableList<GiftBean> = mutableListOf()
             var gIndex = 0
             while (gIndex < itemPerPage) {
@@ -155,12 +166,35 @@ class GiftShopFragment : Fragment(), View.OnClickListener {
         selectIndicator(viewPager.currentItem)
     }
 
+    private fun selectOrNot(index: Int, isSelected: Boolean) {
+        if (index != -1) {
+            val page = index / itemPerPage
+            val position = index % itemPerPage
+            Log.e(TAG, "selectOrNot: page " + page + " pos " + position + " index " + index)
+            val recyclerView: RecyclerView? = giftShopVpAdapter?.getData(page)
+            val adapter: GiftRvAdapter = recyclerView?.adapter as GiftRvAdapter
+            adapter.pressItem(position, isSelected)
+        }
+    }
+
+    private fun pressItem(sIndex: Int) {
+        /*取消之前的选中*/
+        selectOrNot(mLastSIndex, false)
+        /*保存这次*/
+        mLastSIndex = sIndex
+        /*选中这次的选中*/
+        selectOrNot(mLastSIndex, true)
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.back -> {
                 /*如果礼物栏可见就隐藏*/
-                if (ll_content.visibility == View.VISIBLE)
+                if (ll_content.visibility == View.VISIBLE) {
                     switchContent()
+                    /*且取消礼物选中*/
+                    selectOrNot(mLastSIndex, false)
+                }
             }
         }
     }

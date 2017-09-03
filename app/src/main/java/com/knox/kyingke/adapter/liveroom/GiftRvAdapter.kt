@@ -20,10 +20,11 @@ import com.knox.kyingke.viewholder.KRvViewHolder
  *
  */
 
-class GiftRvAdapter: KRvAdapter<GiftBean>() {
+class GiftRvAdapter(var number: Int) : KRvAdapter<GiftBean>() {
     companion object {
-        val TAG:String = "GiftRvAdapter"
+        val TAG: String = "GiftRvAdapter"
     }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): KRvViewHolder {
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.item_gift, parent, false)
         return KRvViewHolder(view)
@@ -44,5 +45,11 @@ class GiftRvAdapter: KRvAdapter<GiftBean>() {
         holder?.setImgUrl(R.id.sdv_gift, KInKeUrlUtil.getEscapeImgUrl(mList[position].icon))
         holder?.setText(R.id.tv_price, mList[position].gold.toString())
         holder?.setText(R.id.tv_name, mList[position].name)
+        holder?.setPressed(R.id.ll_item, mList[position].isPressed)
+    }
+
+    fun pressItem(position: Int, isPressed: Boolean) {
+        mList[position].isPressed = isPressed
+        notifyDataSetChanged()
     }
 }

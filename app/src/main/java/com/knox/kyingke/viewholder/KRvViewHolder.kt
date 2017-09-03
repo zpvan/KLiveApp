@@ -72,4 +72,9 @@ class KRvViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         val view = itemView.findViewById<View>(vId)
         view.visibility = visibility
     }
+
+    fun setPressed(vId: Int, isPressed: Boolean) {
+        val view = itemView.findViewById<LinearLayout>(vId)
+        view.isPressed = isPressed
+    }
 }
