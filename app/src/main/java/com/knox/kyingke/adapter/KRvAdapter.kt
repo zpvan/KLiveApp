@@ -1,6 +1,7 @@
 package com.knox.kyingke.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import com.knox.kyingke.listener.IKRvAdapterListener
 import com.knox.kyingke.viewholder.KRvViewHolder

@@ -28,18 +28,28 @@ import retrofit2.Response
  *
  */
 
-class LiveRoomFragment : Fragment() {
+class LiveRoomFragment : Fragment(), View.OnClickListener {
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.iv_gift_shop -> {
+                giftShopFragment?.switchContent()
+            }
+        }
+    }
 
     companion object {
-        val TAG:String = "LiveRoomFragment"
+        val TAG: String = "LiveRoomFragment"
         val KEY_BUNDLEITEM = "LiveRoomFragment::KEY_BUNDLEITEM"
     }
 
     private var viewerRvAdapter: ViewerRvAdapter? = null
     val mService = KRetrofic.getConnection(IRetrofitConnect::class.java)
+    var giftShopFragment: GiftShopFragment? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frag_live_room, container, false)
+        /*加载礼物数据*/
+        loadGiftShop()
         return view
     }
 
@@ -54,6 +64,7 @@ class LiveRoomFragment : Fragment() {
 
         /*如果放在onCreateView里边, 会找不到recyclerView, 造成nullPointerException*/
         initViewerRv()
+        initListener()
 
         val arguments = arguments
         val serializable = arguments.getSerializable(KEY_BUNDLEITEM)
@@ -62,6 +73,15 @@ class LiveRoomFragment : Fragment() {
 
         val item: HotItemBean = serializable as HotItemBean
         fillLiveRoomInfo(item)
+    }
+
+    private fun loadGiftShop() {
+        giftShopFragment = GiftShopFragment()
+        childFragmentManager.beginTransaction().add(R.id.fl_gift_shop, giftShopFragment).commit()
+    }
+
+    private fun initListener() {
+        iv_gift_shop.setOnClickListener(this)
     }
 
     fun fillLiveRoomInfo(item: HotItemBean) {
@@ -79,7 +99,7 @@ class LiveRoomFragment : Fragment() {
 
     private fun fillViewerInfo(id: String) {
         val call = mService.getRoomViewers(id)
-        call.enqueue(object : Callback<UserListBean>{
+        call.enqueue(object : Callback<UserListBean> {
             override fun onFailure(call: Call<UserListBean>?, t: Throwable?) {
                 Log.e(TAG, "onResponse: 请求getRoomViewers失败")
             }

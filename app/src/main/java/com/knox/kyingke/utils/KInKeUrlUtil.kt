@@ -23,6 +23,8 @@ object KInKeUrlUtil {
     const val SEARCH_KEYWORD = "api/user/search?mtxid=FCAA14EFE150&devi=864394102521707&uid=278794547&sid=20apIKRuUve4iOLo7oSi2i0Coi2ZKfLDhW6OzONeysOV8i2cQFaIWk&conn=WIFI&imei=864394102521707&mtid=0acd9551fb5aa92442069df37393691c&aid=FCAA14EFE1500000&cv=IK3.4.20_Android&smid=DuNRd%2FUxsbeK1L9tQw0TNRvGvuiTGcC08%2FFDr9KEdjdfkXbds8BheQpVHHOYmMkTErodalrJMOW1OTVu4Hamaemw&osversion=android_19&proto=4&logid=&vv=1.0.3-201610291749.android&icc=89860081012521701423&ua=LENOVOLenovoS898t%2B&lc=3000000000034000&imsi=460072521701423&cc=GF10000&count=10&start=0&keyword=_@keyword@_&r_c=1215378052&s_sg=5372685bd13f113826e5f18004f2daf5&s_sc=100&s_st=1478678705"
     //获得房间内的所有观众头像等信息
     const val GET_ROOM_VIEWERS = "api/live/users"
+    //礼物商店
+    const val GIFT_ALL = "api/resource/gift_info?type=2"
 
     fun getScaledImgUrl(imgUrl: String, width: Int, height: Int): String {
         var imgUrl = imgUrl
@@ -43,7 +45,7 @@ object KInKeUrlUtil {
     //    & 	URL中指定的参数间的分隔符	%26
     //    = 	URL中指定参数的值	        %3D
     //    * 	URL中指定参数的值	        %2A
-    private fun getEscapeImgUrl(imgUrl: String): String {
+    fun getEscapeImgUrl(imgUrl: String): String {
         var imgUrl = imgUrl
         if (!imgUrl.contains("http:")) {
             imgUrl = "http://img2.inke.cn/" + imgUrl

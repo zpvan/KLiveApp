@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     val TAG_MINE = "tagMineFragment"
 
     override fun onClick(v: View?) {
-        Log.e(TAG, "onClick: ")
+        Log.e(TAG, "switchContent: ")
         when (v?.id) {
             R.id.iv_live -> clickBtn(TAG_LIVE)
             R.id.iv_mine -> clickBtn(TAG_MINE)
