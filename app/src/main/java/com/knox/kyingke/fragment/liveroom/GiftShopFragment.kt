@@ -16,10 +16,12 @@ import com.knox.kyingke.adapter.liveroom.GiftRvAdapter
 import com.knox.kyingke.adapter.liveroom.GiftShopVpAdapter
 import com.knox.kyingke.bean.liveroom.GiftBean
 import com.knox.kyingke.bean.liveroom.GiftListBean
+import com.knox.kyingke.event.WidgetEvent
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
 import com.knox.kyingke.utils.KSimpleUtil
 import kotlinx.android.synthetic.main.frag_gift_shop.*
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +35,7 @@ import retrofit2.Response
  *
  */
 
-class GiftShopFragment : Fragment() {
+class GiftShopFragment : Fragment(), View.OnClickListener {
 
     companion object {
         val TAG: String = "GiftShopFragment"
@@ -57,19 +59,16 @@ class GiftShopFragment : Fragment() {
 
     private fun initListener() {
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
+            override fun onPageScrollStateChanged(state: Int) {}
 
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
                 selectIndicator(position)
             }
-
         })
+
+        back.setOnClickListener(this)
     }
 
     private fun selectIndicator(position: Int) {
@@ -156,7 +155,18 @@ class GiftShopFragment : Fragment() {
         selectIndicator(viewPager.currentItem)
     }
 
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.back -> {
+                /*如果礼物栏可见就隐藏*/
+                if (ll_content.visibility == View.VISIBLE)
+                    switchContent()
+            }
+        }
+    }
+
     fun switchContent() {
         ll_content.visibility = if (ll_content.visibility == View.GONE) View.VISIBLE else View.GONE
+        EventBus.getDefault().post(WidgetEvent(if (ll_content.visibility == View.VISIBLE) WidgetEvent.EVENT_HIDE else WidgetEvent.EVENT_SHOW))
     }
 }

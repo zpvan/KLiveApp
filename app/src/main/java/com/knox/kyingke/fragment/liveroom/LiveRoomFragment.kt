@@ -7,14 +7,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.liveroom.ViewerRvAdapter
 import com.knox.kyingke.bean.hot.HotItemBean
 import com.knox.kyingke.bean.liveroom.UserListBean
+import com.knox.kyingke.event.WidgetEvent
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
 import com.knox.kyingke.utils.KInKeUrlUtil
 import kotlinx.android.synthetic.main.frag_live_room.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -109,5 +114,24 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
                 viewerRvAdapter?.setDatas(body?.users)
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        EventBus.getDefault().unregister(this)
+        super.onStop()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: WidgetEvent) {
+        Log.e(TAG, "onMessageEvent: " + event.msg)
+        when (event.msg) {
+            WidgetEvent.EVENT_HIDE -> rl_bottom.visibility = View.GONE
+            WidgetEvent.EVENT_SHOW -> rl_bottom.visibility = View.VISIBLE
+        }
     }
 }
