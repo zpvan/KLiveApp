@@ -3,6 +3,7 @@ package com.knox.kyingke.adapter.liveroom
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.knox.kyingke.R
 import com.knox.kyingke.adapter.KRvAdapter
@@ -30,10 +31,16 @@ class GiftRvAdapter: KRvAdapter<GiftBean>() {
 
     override fun onBindViewHolder2(holder: KRvViewHolder?, position: Int) {
         /*有可能遇到伪造数据*/
-        if (TextUtils.isEmpty(mList[position].icon))
+        if (TextUtils.isEmpty(mList[position].icon)) {
+            holder?.setVisibility(R.id.iv_pop_lian, View.INVISIBLE)
+            holder?.setVisibility(R.id.tv_price, View.INVISIBLE)
+            holder?.setVisibility(R.id.iv_pay, View.INVISIBLE)
             return
+        }
 
-
+        holder?.setVisibility(R.id.iv_pop_lian, View.VISIBLE)
+        holder?.setVisibility(R.id.tv_name, View.VISIBLE)
+        holder?.setVisibility(R.id.iv_pay, View.VISIBLE)
         holder?.setImgUrl(R.id.sdv_gift, KInKeUrlUtil.getEscapeImgUrl(mList[position].icon))
         holder?.setText(R.id.tv_price, mList[position].gold.toString())
         holder?.setText(R.id.tv_name, mList[position].name)

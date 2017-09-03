@@ -68,4 +68,8 @@ class KRvViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         imageView.setImageResource(rId)
     }
 
+    fun setVisibility(vId: Int, visibility: Int) {
+        val view = itemView.findViewById<View>(vId)
+        view.visibility = visibility
+    }
 }
