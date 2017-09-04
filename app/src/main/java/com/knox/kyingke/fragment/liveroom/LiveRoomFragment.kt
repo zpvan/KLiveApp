@@ -70,13 +70,14 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
                             text = text + ":" + bean.msg
                         }
                         WebSocketUserBean.TYPE_SEND_GIFT -> {
-                            text = text + "送出" + bean.gift.name
+                            text = text + "送出" + bean.gift?.name
                         }
                     }
                     chatRvAdapter?.addAtLast(text)
                     /*移到最后那条的位置*/
-                    if (chatRvAdapter?.itemCount!! > 0) {
-                        recyclerView_chat.scrollToPosition(chatRvAdapter?.itemCount!! - 1)
+                    val itemCount = chatRvAdapter?.itemCount!!
+                    if (itemCount > 0) {
+                        recyclerView_chat.scrollToPosition(itemCount - 1)
                     }
                 }
             }

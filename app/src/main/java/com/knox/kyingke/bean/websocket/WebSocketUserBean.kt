@@ -23,9 +23,9 @@ class WebSocketUserBean {
     var group: String = ""; //房间号
     var userId: String = ""; //用户id, U123456
     var msg: String = ""
-    var gift: GiftBean = GiftBean()
+    var gift: GiftBean? = null
 
-    constructor(userId: String): this() {
+    constructor(userId: String) : this() {
         this.userId = userId
     }
 

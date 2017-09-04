@@ -1,7 +1,6 @@
 package com.knox.kyingke.adapter.liveroom
 
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,11 +44,11 @@ class GiftRvAdapter(var number: Int) : KRvAdapter<GiftBean>() {
         holder?.setImgUrl(R.id.sdv_gift, KInKeUrlUtil.getEscapeImgUrl(mList[position].icon))
         holder?.setText(R.id.tv_price, mList[position].gold.toString())
         holder?.setText(R.id.tv_name, mList[position].name)
-        holder?.setPressed(R.id.ll_item, mList[position].isPressed)
+        holder?.setPressed(R.id.ll_item, mList[position].select)
     }
 
     fun pressItem(position: Int, isPressed: Boolean) {
-        mList[position].isPressed = isPressed
+        mList[position].select = isPressed
         notifyDataSetChanged()
     }
 }
