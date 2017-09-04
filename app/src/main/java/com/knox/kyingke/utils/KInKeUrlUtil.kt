@@ -25,6 +25,8 @@ object KInKeUrlUtil {
     const val GET_ROOM_VIEWERS = "api/live/users"
     //礼物商店
     const val GIFT_ALL = "api/resource/gift_info?type=2"
+    //websocket服务器地址
+    const val WSURL = "ws://47.93.30.78:8080/WebSocketYK/websocket"
 
     fun getScaledImgUrl(imgUrl: String, width: Int, height: Int): String {
         var imgUrl = imgUrl

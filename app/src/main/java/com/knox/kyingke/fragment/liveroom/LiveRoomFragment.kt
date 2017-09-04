@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.knox.kyingke.KInKeApplication
 import com.knox.kyingke.R
 import com.knox.kyingke.R.id.*
 import com.knox.kyingke.adapter.liveroom.ViewerRvAdapter
@@ -18,7 +19,9 @@ import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
 import com.knox.kyingke.utils.KInKeUrlUtil
 import com.knox.kyingke.utils.KSimpleUtil
+import com.knox.kyingke.utils.KWebSocketUtil
 import kotlinx.android.synthetic.main.frag_live_room.*
+import okhttp3.WebSocket
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -83,6 +86,7 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
     private fun initListener() {
         iv_gift_shop.setOnClickListener(this)
         iv_send.setOnClickListener(this)
+        tv_send_msg.setOnClickListener(this)
 
         KSimpleUtil.setOnKeyboardListener(activity, object : KSimpleUtil.KeyboardListener {
             override fun onKeyboardShow(distance: Int) {
@@ -115,6 +119,9 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
                 edt.requestFocus()
                 KSimpleUtil.KshowInputKeyboard(activity, edt)
             }
+            R.id.tv_send_msg -> {
+                /*发送文字到WebSocket Server*/
+            }
         }
     }
 
@@ -129,6 +136,26 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
         tv_anchor_number.setText("主播号: " + item.creator.id)
         /*观众头像*/
         fillViewerInfo(item.id)
+        /*登陆直播间*/
+        loginLiveRoom()
+    }
+
+    private fun loginLiveRoom() {
+        KWebSocketUtil.instance.conn(KInKeUrlUtil.WSURL, object : KWebSocketUtil.IKWebSocketHandler{
+            override fun onOpen(webSocket: WebSocket?) {
+                Log.e(TAG, "onOpen: 连接成功" + " userId " + KInKeApplication.userId)
+            }
+
+            override fun onMessage(text: String?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFail(t: Throwable?, response: okhttp3.Response?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+
     }
 
     private fun fillViewerInfo(id: String) {

@@ -5,6 +5,7 @@ import android.content.Context
 import com.facebook.cache.disk.DiskCacheConfig
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.core.ImagePipelineConfig
+import java.util.*
 
 /**
  * @author Knox.Tsang
@@ -19,6 +20,7 @@ class KInKeApplication : Application() {
 
     companion object {
         var mContext: Context? = null
+        val userId: String = "U" + (Random().nextDouble() * 1_000_000).toInt()
     }
 
     override fun onCreate() {
