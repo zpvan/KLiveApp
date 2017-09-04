@@ -83,7 +83,7 @@ class LiveRoomActivity : AppCompatActivity() {
                     (page as ViewGroup).addView(view)
 
 
-                    loadNewLiveStream(mAdapter!!.getItem(currentItem)!!.stream_addr)
+                    //loadNewLiveStream(mAdapter!!.getItem(currentItem)!!.stream_addr)
                     loadNewLiveInfo(mAdapter?.getItem(currentItem))
                 }
             }

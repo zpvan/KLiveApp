@@ -163,7 +163,7 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
             R.id.tv_send_msg -> {
                 /*发送文字到WebSocket Server*/
                 val bean = WebSocketUserBean(KInKeApplication.userId)
-                bean.type = WebSocketUserBean.TYPE_SEND_GIFT
+                bean.type = WebSocketUserBean.TYPE_SEND_MSG
                 bean.group = tv_gold_number.text.toString()
                 bean.msg = edt.text.toString()
                 Log.e(TAG, "onClick: 发送弹幕 " + KGsonUtil.b2s(bean))
