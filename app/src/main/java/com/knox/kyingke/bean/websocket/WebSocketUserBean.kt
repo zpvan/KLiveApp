@@ -25,8 +25,8 @@ class WebSocketUserBean {
     var msg: String = ""
     var gift: GiftBean = GiftBean()
 
-    constructor(type: Int): this() {
-        this.type = type
+    constructor(userId: String): this() {
+        this.userId = userId
     }
 
     constructor()

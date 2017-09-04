@@ -1,6 +1,8 @@
 package com.knox.kyingke.fragment.liveroom
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -11,12 +13,15 @@ import android.widget.Toast
 import com.knox.kyingke.KInKeApplication
 import com.knox.kyingke.R
 import com.knox.kyingke.R.id.*
+import com.knox.kyingke.adapter.liveroom.ChatRvAdapter
 import com.knox.kyingke.adapter.liveroom.ViewerRvAdapter
 import com.knox.kyingke.bean.hot.HotItemBean
 import com.knox.kyingke.bean.liveroom.UserListBean
+import com.knox.kyingke.bean.websocket.WebSocketUserBean
 import com.knox.kyingke.event.WidgetEvent
 import com.knox.kyingke.http.IRetrofitConnect
 import com.knox.kyingke.http.KRetrofic
+import com.knox.kyingke.utils.KGsonUtil
 import com.knox.kyingke.utils.KInKeUrlUtil
 import com.knox.kyingke.utils.KSimpleUtil
 import com.knox.kyingke.utils.KWebSocketUtil
@@ -46,14 +51,49 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
     }
 
     private var viewerRvAdapter: ViewerRvAdapter? = null
+    private var chatRvAdapter: ChatRvAdapter? = null
     val mService = KRetrofic.getConnection(IRetrofitConnect::class.java)
     var giftShopFragment: GiftShopFragment? = null
+    var mWebSocket: WebSocket? = null
+    val ChatMessage: Int = 1001
+    var mHandler: Handler = object : Handler() {
+        override fun handleMessage(msg: Message?) {
+            when (msg?.what) {
+                ChatMessage -> {
+                    val bean: WebSocketUserBean = msg.obj as WebSocketUserBean
+                    var text = bean.userId
+                    when (bean.type) {
+                        WebSocketUserBean.TYPE_LOGIN -> {
+                            text = text + "上线了"
+                        }
+                        WebSocketUserBean.TYPE_SEND_MSG -> {
+                            text = text + ":" + bean.msg
+                        }
+                        WebSocketUserBean.TYPE_SEND_GIFT -> {
+                            text = text + "送出" + bean.gift.name
+                        }
+                    }
+                    chatRvAdapter?.addAtLast(text)
+                    /*移到最后那条的位置*/
+                    if (chatRvAdapter?.itemCount!! > 0) {
+                        recyclerView_chat.scrollToPosition(chatRvAdapter?.itemCount!! - 1)
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.frag_live_room, container, false)
         /*加载礼物数据*/
         loadGiftShop()
         return view
+    }
+
+    private fun initChatRv() {
+        recyclerView_chat.layoutManager = LinearLayoutManager(context)
+        chatRvAdapter = ChatRvAdapter()
+        recyclerView_chat.adapter = chatRvAdapter
     }
 
     private fun initViewerRv() {
@@ -67,6 +107,7 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
 
         /*如果放在onCreateView里边, 会找不到recyclerView, 造成nullPointerException*/
         initViewerRv()
+        initChatRv()
         initListener()
 
         val arguments = arguments
@@ -121,11 +162,21 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
             }
             R.id.tv_send_msg -> {
                 /*发送文字到WebSocket Server*/
+                val bean = WebSocketUserBean(KInKeApplication.userId)
+                bean.type = WebSocketUserBean.TYPE_SEND_GIFT
+                bean.group = tv_gold_number.text.toString()
+                bean.msg = edt.text.toString()
+                Log.e(TAG, "onClick: 发送弹幕 " + KGsonUtil.b2s(bean))
+                mWebSocket?.send(KGsonUtil.b2s(bean))
+                /*清空editText上的缓存*/
+                edt.text.clear()
             }
         }
     }
 
     fun fillLiveRoomInfo(item: HotItemBean) {
+        /*清空聊天窗口信息*/
+        chatRvAdapter?.clearDatas()
         /*主播头像*/
         iv_anchor_icon.setImageURI(KInKeUrlUtil.getScaledImgUrl(item.creator.portrait, 30, 30))
         /*观众人数*/
@@ -137,25 +188,37 @@ class LiveRoomFragment : Fragment(), View.OnClickListener {
         /*观众头像*/
         fillViewerInfo(item.id)
         /*登陆直播间*/
-        loginLiveRoom()
+        loginLiveRoom(item.room_id.toString())
     }
 
-    private fun loginLiveRoom() {
-        KWebSocketUtil.instance.conn(KInKeUrlUtil.WSURL, object : KWebSocketUtil.IKWebSocketHandler{
+    private fun loginLiveRoom(roomId: String) {
+        KWebSocketUtil.instance.conn(KInKeUrlUtil.WSURL, object : KWebSocketUtil.IKWebSocketHandler {
             override fun onOpen(webSocket: WebSocket?) {
                 Log.e(TAG, "onOpen: 连接成功" + " userId " + KInKeApplication.userId)
+                mWebSocket = webSocket
+                val bean = WebSocketUserBean(KInKeApplication.userId)
+                bean.type = WebSocketUserBean.TYPE_LOGIN
+                bean.group = roomId
+                Log.e(TAG, "onOpen: 请求登陆房间 " + KGsonUtil.b2s(bean))
+                mWebSocket?.send(KGsonUtil.b2s(bean))
             }
 
             override fun onMessage(text: String?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Log.e(TAG, "onMessage: 组装json " + text)
+                val bean: WebSocketUserBean = KGsonUtil.s2b(text!!, WebSocketUserBean::class.java)
+                handleMessageFromWS(bean)
             }
 
             override fun onFail(t: Throwable?, response: okhttp3.Response?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Log.e(TAG, "onFail: webSocket连接失败")
             }
 
         })
 
+    }
+
+    private fun handleMessageFromWS(bean: WebSocketUserBean) {
+        mHandler.obtainMessage(ChatMessage, bean).sendToTarget()
     }
 
     private fun fillViewerInfo(id: String) {
